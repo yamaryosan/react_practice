@@ -1,46 +1,52 @@
 import React, { Component } from 'react';
 import './App.css';
-import Rect from './Rect';
+// import Rect from './Rect';
 
 class App extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      counter: 0,
-      msg: "count start",
-      flag: true,
-    }
-    this.doAction = this.doAction.bind(this)
+  state = {
+    list: []
   }
 
-  doAction(event) {
-    this.setState({
-      counter: this.state.counter + 1,
-      msg: this.state.counter,
-      flag: !this.state.flag
-    })
+  doAction = (event) => {
+    const x = event.pageX;
+    const y = event.pageY;
+    this.setState(prevState => ({
+      list: [...prevState.list, { x, y }]
+    }));
   }
-  
-  render(){
-    return <div>
-      <h1 className="bg-primary text-white display-4">React</h1>
-      <div className="container">
-        <p className="subtitle">Count number.</p>
-        {
-          this.state.flag ?
-          <div className="alert alert-warning text-right">
-            <p className="h5">count: {this.state.msg}</p>
+
+  draw = (d) => {
+    const style = {
+      position: "absolute",
+      left: `${d.x - 25}px`,
+      top: `${d.y - 25}px`,
+      width: "50px",
+      height: "50px",
+      backgroundColor: "#66f3",
+    };
+    return <div style={style}></div>;
+  }
+
+  render() {
+    const area = {
+      width: "500px",
+      height: "500px",
+      border: "1px solid blue"
+    };
+
+    return (
+      <div>
+        <h1 className="bg-primary text-white display-4">React</h1>
+        <div className="container">
+          <p className="subtitle">
+            Draw rectangle.
+          </p>
+          <div style={area} onClick={this.doAction}>
+            {this.state.list.map((value, index) => this.draw(value, index))}
           </div>
-          :
-          <div className="alert alert-warning text-left">
-            <p className="h5">{this.state.msg}</p>
-          </div>
-        }
-        <div className="text-center">
-          <button className="btn btn-primary" onClick={this.doAction}>Click</button>
         </div>
       </div>
-    </div>
+    );
   }
 }
 
