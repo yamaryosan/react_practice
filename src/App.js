@@ -2,50 +2,46 @@ import React, { Component } from 'react';
 import './App.css';
 // import Rect from './Rect';
 
+let data = {
+  title: "React-Common-Title",
+  message: "React-Common-Message"
+}
+
+const SampleContext = React.createContext(data)
+
 class App extends Component {
-  input = ""
-
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return <div>
       <h1 className="bg-primary text-white display-4">React</h1>
       <div className="container">
-        <Message title="Children!">
-          これはコンポーネント内のコンテンツです。
-          マルでテキストを分割し、リストにして表示します。
-          改行は必要ありません。
-        </Message>
+        <Title />
+        <Message />
       </div>
     </div>
   }
 }
 
-class Message extends Component {
-  li = {
-    fontSize:"14pt",
-    fontWeight:"bold",
-    color:"#090",
-  }
+class Title extends Component {
+  static contextType = SampleContext;
 
   render() {
-    let content = this.props.children
-    let arr = content.split("。")
-    let arr2 = []
-    for(let i = 0; i < arr.length; i++) {
-      if(arr[i].trim() != "") {
-        arr2.push(arr[i])
-      }
-    }
-    let list = arr2.map((value, key) => (
-      <li className="list-group-item" style={this.li} key={key}>{key + 1}. {value}.</li>)
-      )
-      return <div>
-        <h2>{this.props.title}</h2>
-        <ol className="list-group">{list}</ol>
+    return (
+      <div className="card p-2 my-3">
+        <h2>{this.context.title}</h2>
       </div>
+    )
+  }
+}
+
+class Message extends Component {
+  static contextType = SampleContext;
+
+  render() {
+    return (
+      <div className="alert alert-primary">
+        <p>{this.context.message}</p>
+      </div>
+    )
   }
 }
 
