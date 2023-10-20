@@ -3,50 +3,49 @@ import './App.css';
 // import Rect from './Rect';
 
 class App extends Component {
-  state = {
-    list: []
-  }
+  input = ""
 
-  doAction = (event) => {
-    const x = event.pageX;
-    const y = event.pageY;
-    this.setState(prevState => ({
-      list: [...prevState.list, { x, y }]
-    }));
-  }
-
-  draw = (d) => {
-    const style = {
-      position: "absolute",
-      left: `${d.x - 25}px`,
-      top: `${d.y - 25}px`,
-      width: "50px",
-      height: "50px",
-      backgroundColor: "#66f3",
-    };
-    return <div style={style}></div>;
+  constructor(props) {
+    super(props)
   }
 
   render() {
-    const area = {
-      width: "500px",
-      height: "500px",
-      border: "1px solid blue"
-    };
-
-    return (
-      <div>
-        <h1 className="bg-primary text-white display-4">React</h1>
-        <div className="container">
-          <p className="subtitle">
-            Draw rectangle.
-          </p>
-          <div style={area} onClick={this.doAction}>
-            {this.state.list.map((value, index) => this.draw(value, index))}
-          </div>
-        </div>
+    return <div>
+      <h1 className="bg-primary text-white display-4">React</h1>
+      <div className="container">
+        <Message title="Children!">
+          これはコンポーネント内のコンテンツです。
+          マルでテキストを分割し、リストにして表示します。
+          改行は必要ありません。
+        </Message>
       </div>
-    );
+    </div>
+  }
+}
+
+class Message extends Component {
+  li = {
+    fontSize:"14pt",
+    fontWeight:"bold",
+    color:"#090",
+  }
+
+  render() {
+    let content = this.props.children
+    let arr = content.split("。")
+    let arr2 = []
+    for(let i = 0; i < arr.length; i++) {
+      if(arr[i].trim() != "") {
+        arr2.push(arr[i])
+      }
+    }
+    let list = arr2.map((value, key) => (
+      <li className="list-group-item" style={this.li} key={key}>{key + 1}. {value}.</li>)
+      )
+      return <div>
+        <h2>{this.props.title}</h2>
+        <ol className="list-group">{list}</ol>
+      </div>
   }
 }
 
