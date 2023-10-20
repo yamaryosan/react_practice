@@ -1,48 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 // import Rect from './Rect';
 
-let data = {
-  title: "React-Common-Title",
-  message: "React-Common-Message"
-}
+function App() {
+  const [message] = useState('Welcome to React!')
 
-const SampleContext = React.createContext(data)
-
-class App extends Component {
-  render() {
-    return <div>
+  return (
+    <div>
       <h1 className="bg-primary text-white display-4">React</h1>
       <div className="container">
-        <Title />
-        <Message />
+        <h4 classname="my-3">
+          Hooks sample
+        </h4>
+        <div className="alert alert-primary text-center">
+          <p className="h5">{message}</p>
+        </div>
       </div>
     </div>
-  }
-}
-
-class Title extends Component {
-  static contextType = SampleContext;
-
-  render() {
-    return (
-      <div className="card p-2 my-3">
-        <h2>{this.context.title}</h2>
-      </div>
-    )
-  }
-}
-
-class Message extends Component {
-  static contextType = SampleContext;
-
-  render() {
-    return (
-      <div className="alert alert-primary">
-        <p>{this.context.message}</p>
-      </div>
-    )
-  }
+  )
 }
 
 export default App;
