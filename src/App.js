@@ -2,39 +2,58 @@ import React, { useState } from 'react'
 import './App.css';
 // import Rect from './Rect';
 
-const useTax = (tax1, tax2) => {
-  const [price, setPrice] = useState(1000)
-  const [tx1] = useState(tax1)
-  const [tx2] = useState(tax2)
-
-  const tax = () => {
-    return Math.floor(price * (1.0 + tx1 / 100))
+const total = (a) => {
+  let sum = 0;
+  for (let i = 1; i <= a; i++) {
+    sum += i;
   }
-  const reduced = () => {
-    return Math.floor(price * (1.0 + tx2 / 100))
-  }
-
-  return [price, tax, reduced, setPrice]
+  return sum;
 }
 
-function AlertMessage(props) {
-  const [price, tax, reduced, setPrice] = useTax(10, 8)
+const tax = (a) => {
+  return Math.floor(a * 1.1);
+}
 
-  const DoChange = (event) => {
-    let p = event.target.value
-    setPrice(p)
+function useCalc(num=0, func = (a)=>{return a}) {
+  const [msg, setMsg] = useState(null)
+
+  const setValue = (p) => {
+    let res = func(p)
+    setMsg(<p className="h5">※{p}の結果は、{res}です。</p>)
   }
 
-  return <div className="alert alert-primary h5">
-    <p className="h5">通常税率 : {tax()} 円</p>
-    <p className="h5">軽減税率 : {reduced()} 円</p>
-    <div className="form-group">
-      <label className="form-group-label">Price:</label>
-      <input type="number" className="form-control" onChange={DoChange} value={price} />
-    </div>
+  return [msg, setValue]
+}
+
+// 和を求めて表示
+function AlertMessage(props) {
+  const [msg, setCalc] = useCalc(0, total)
+
+  const onChange = (event) => {
+    setCalc(event.target.value)
+  }
+
+  return <div className="alert alert-primary h5 text-primary">
+    <h5>{msg}</h5>
+    <input type="number" onChange={onChange} min="0" max="10000" className="form-control" />
   </div>
 }
 
+// 税込価格を求めて表示
+function CardMessage(props) {
+  const [msg, setCalc] = useCalc(0, tax)
+
+  const onChange = (event) => {
+    setCalc(event.target.value)
+  }
+
+  return <div className="card p-3 h5 border-primary">
+    <h5>{msg}</h5>
+    <input type="range" onChange={onChange} min="0" max="10000" step="100" className="form-control" />
+  </div>
+}
+
+// ベースコンポーネント
 function App() {
   return (
     <div>
@@ -42,6 +61,7 @@ function App() {
       <div className="container">
         <h4 className="my-3">Hooks sample</h4>
         <AlertMessage />
+        <CardMessage />
       </div>
     </div>
   )
