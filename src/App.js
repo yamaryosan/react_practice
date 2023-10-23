@@ -1,51 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './App.css';
 // import Rect from './Rect';
 
+function useCounter() {
+  const [num, setNum] = useState(0)
+
+  const count = () => {
+    setNum(num + 1)
+  }
+
+  return [num, count]
+}
+
 function AlertMessage(props) {
-  return <div className="alert alert-primary h5 text-primary">
-    <h5>{props.msg}</h5>
+  const [counter, plus] = useCounter()
+
+  return <div className="alert alert-primary h5 text-center">
+    <h4>count: {counter}</h4>
+    <button onClick={plus} className="btn btn-primary">
+      count
+    </button>
   </div>
 }
 
 function App() {
-  const [value, setValue] = useState(1000)
-  const [tax1, setTax1] = useState(0)
-  const [tax2, setTax2] = useState(0)
-  const [msg, setMsg] = useState(<p>set a price...</p>)
-
-  const doChange = (event) => {
-    setValue(event.target.value)
-  }
-
-  const doAction = () => {
-    let res = <div>
-      <p>軽減税率(8%) : {tax1} 円</p>
-      <p>通常税率(10%) : {tax2} 円</p>
-    </div>
-    setMsg(res)
-  }
-
-  useEffect(() => {
-    setTax1(Math.floor(value * 1.08))
-  }, [value])
-
-  useEffect(() => {
-    setTax2(Math.floor(value * 1.10))
-  }, [value])
-
-  return <div>
-    <h1 className="bg-primary text-white display-4">React</h1>
-    <div className="container">
-      <h4 className="my-3">Hooks sample</h4>
-      <AlertMessage msg={msg} />
-      <div className="form-group">
-        <label>Input:</label>
-        <input type="number" className="form-control" onChange={doChange} />
+  return (
+    <div>
+      <h1 className="bg-primary text-white display-4">React</h1>
+      <div className="container">
+        <h4 className="my-3">
+          Hooks sample
+        </h4>
+        <AlertMessage />
       </div>
-      <button className="btn btn-primary" onClick={doAction}>Calc</button>
     </div>
-  </div>
+  )
 }
 
 export default App;
