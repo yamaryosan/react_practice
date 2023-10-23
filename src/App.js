@@ -2,24 +2,36 @@ import React, { useState } from 'react'
 import './App.css';
 // import Rect from './Rect';
 
-function useCounter() {
-  const [num, setNum] = useState(0)
+const useTax = (tax1, tax2) => {
+  const [price, setPrice] = useState(1000)
+  const [tx1] = useState(tax1)
+  const [tx2] = useState(tax2)
 
-  const count = () => {
-    setNum(num + 1)
+  const tax = () => {
+    return Math.floor(price * (1.0 + tx1 / 100))
+  }
+  const reduced = () => {
+    return Math.floor(price * (1.0 + tx2 / 100))
   }
 
-  return [num, count]
+  return [price, tax, reduced, setPrice]
 }
 
 function AlertMessage(props) {
-  const [counter, plus] = useCounter()
+  const [price, tax, reduced, setPrice] = useTax(10, 8)
 
-  return <div className="alert alert-primary h5 text-center">
-    <h4>count: {counter}</h4>
-    <button onClick={plus} className="btn btn-primary">
-      count
-    </button>
+  const DoChange = (event) => {
+    let p = event.target.value
+    setPrice(p)
+  }
+
+  return <div className="alert alert-primary h5">
+    <p className="h5">通常税率 : {tax()} 円</p>
+    <p className="h5">軽減税率 : {reduced()} 円</p>
+    <div className="form-group">
+      <label className="form-group-label">Price:</label>
+      <input type="number" className="form-control" onChange={DoChange} value={price} />
+    </div>
   </div>
 }
 
@@ -28,9 +40,7 @@ function App() {
     <div>
       <h1 className="bg-primary text-white display-4">React</h1>
       <div className="container">
-        <h4 className="my-3">
-          Hooks sample
-        </h4>
+        <h4 className="my-3">Hooks sample</h4>
         <AlertMessage />
       </div>
     </div>
