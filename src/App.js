@@ -1,70 +1,60 @@
 import React, { useState } from 'react'
+import usePersist from './Persist'
 import './App.css';
 // import Rect from './Rect';
 
-const total = (a) => {
-  let sum = 0;
-  for (let i = 1; i <= a; i++) {
-    sum += i;
-  }
-  return sum;
-}
-
-const tax = (a) => {
-  return Math.floor(a * 1.1);
-}
-
-function useCalc(num=0, func = (a)=>{return a}) {
-  const [msg, setMsg] = useState(null)
-
-  const setValue = (p) => {
-    let res = func(p)
-    setMsg(<p className="h5">※{p}の結果は、{res}です。</p>)
-  }
-
-  return [msg, setValue]
-}
-
-// 和を求めて表示
 function AlertMessage(props) {
-  const [msg, setCalc] = useCalc(0, total)
+    const [name, setName] = useState("")
+    const [mail, setMail] = useState("")
+    const [age, setAge] = useState(0)
+    const [myData, setMyData] = usePersist("mydata", null)
 
-  const onChange = (event) => {
-    setCalc(event.target.value)
-  }
+    const onChangeName = (event) => {
+        setName(event.target.value)
+    }
+    const onChangeMail = (event) => {
+        setMail(event.target.value)
+    }
+    const onChangeAge = (event) => {
+        setAge(event.target.value)
+    }
+    const onAction = (event) => {
+        const data = {
+            name: name,
+            mail: mail,
+            age: age
+        }
+        setMyData(data)
+    }
 
-  return <div className="alert alert-primary h5 text-primary">
-    <h5>{msg}</h5>
-    <input type="number" onChange={onChange} min="0" max="10000" className="form-control" />
-  </div>
-}
-
-// 税込価格を求めて表示
-function CardMessage(props) {
-  const [msg, setCalc] = useCalc(0, tax)
-
-  const onChange = (event) => {
-    setCalc(event.target.value)
-  }
-
-  return <div className="card p-3 h5 border-primary">
-    <h5>{msg}</h5>
-    <input type="range" onChange={onChange} min="0" max="10000" step="100" className="form-control" />
-  </div>
-}
-
-// ベースコンポーネント
-function App() {
-  return (
-    <div>
-      <h1 className="bg-primary text-white display-4">React</h1>
-      <div className="container">
-        <h4 className="my-3">Hooks sample</h4>
-        <AlertMessage />
-        <CardMessage />
-      </div>
+    return <div className="alert alert-primary h5 text-primary">
+        <h5 className="mb-4">{JSON.stringify(myData)}</h5>
+        <div className="form-group">
+            <label className="h6">Name</label>
+            <input type="text" onChange={onChangeName} className="form-control" />
+        </div>
+        <div className="form-group">
+            <label className="h6">Mail</label>
+            <input type="text" onChange={onChangeMail} className="form-control" />
+        </div>
+        <div className="form-group">
+            <label className="h6">Age</label>
+            <input type="number" onChange={onChangeAge} className="form-control" />
+        </div>
+        <button onClick={onAction} className="btn btn-primary">Save it!</button>
     </div>
-  )
+}
+
+function App() {
+    return (
+        <div>
+            <h1 className="bg-primary text-white display-4">React</h1>
+            <div className="container">
+                <h4 className="my-3">Hooks sample</h4>
+                <AlertMessage />
+            </div>
+        </div>
+    )
 }
 
 export default App;
